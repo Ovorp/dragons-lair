@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 
 export default class AddTreasure extends Component {
   constructor() {
@@ -13,6 +14,16 @@ export default class AddTreasure extends Component {
   }
 
   addTreasure() {
+    const { treasureURL } = this.state;
+    axios
+      .post('/api/treasure/user', { treasureURL })
+      .then((response) => {
+        this.props.addMyTreasure(response.data);
+        this.setState({
+          treasureURL: '',
+        });
+      })
+      .catch((err) => alert(err.response.request.response));
     // post to /api/treasure/user here
   }
 
@@ -22,7 +33,7 @@ export default class AddTreasure extends Component {
         <input
           type="text"
           placeholder="Add image URL"
-          onChange={e => this.handleInput(e)}
+          onChange={(e) => this.handleInput(e)}
           value={this.state.treasureURL}
         />
         <button onClick={() => this.addTreasure()}>Add</button>
